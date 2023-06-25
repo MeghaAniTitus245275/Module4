@@ -1,0 +1,12 @@
+package com.example.demo.service;
+
+import com.example.demo.entity.entity;
+
+public class service {
+
+	public String create(entity entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

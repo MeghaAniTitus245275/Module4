@@ -1,0 +1,188 @@
+package com.example.demo.Controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.Repository.bookrepo;
+import com.example.demo.Repository.userrepo;
+import com.example.demo.entity.bookentity;
+import com.example.demo.entity.userentity;
+import com.example.demo.exceptions.BooknotFoundException;
+import com.example.demo.exceptions.UserNotFoundException;
+
+
+@RestController
+@RequestMapping("/api")
+public class Controller {
+	
+	@Autowired
+	private bookrepo bookrep;
+	
+	@Autowired
+	private userrepo userrep;
+	
+	//creation
+	
+	@PostMapping("/addbook")
+	public ResponseEntity<bookentity> addbook(@RequestBody  bookentity books)
+	{
+		//bookentity books = bookentity.build(0,booksv.getBookname());
+		return ResponseEntity.ok().body(bookrep.save(books));
+	}
+	
+	@PostMapping("/adduser")
+	public ResponseEntity<userentity> adduser(@RequestBody userentity users)
+	{
+		return ResponseEntity.ok().body(userrep.save(users));
+	}
+	
+	
+	
+	
+	//fetching
+	
+	@GetMapping("/getbook/{id}")
+	public ResponseEntity<bookentity> fetchbook(@PathVariable int id)throws BooknotFoundException
+	{
+		bookentity books= bookrep.findById(id).orElse(null);
+		if(books!=null)
+		{
+			return ResponseEntity.ok().body(books);
+		}
+		else
+		{
+			//return ResponseEntity.noContent().build();
+			throw new BooknotFoundException("book not found with this id "+id);
+		}
+	}
+	
+	@GetMapping("/getuser/{id}")
+	public ResponseEntity<userentity> fetchuser(@PathVariable int id) throws UserNotFoundException
+	{
+		userentity users = userrep.findById(id).orElse(null);
+		if(users!=null)
+		{
+			return ResponseEntity.ok().body(users);
+		}
+		else
+		{
+			//return ResponseEntity.noContent().build();
+			throw new UserNotFoundException("user not found with this id "+id);
+		}
+	}
+	
+	
+	
+	
+	
+	//fetching all
+	
+	@GetMapping("/getallbooks")
+	public ResponseEntity<List<bookentity>> fetchallbooks()
+	{
+		return ResponseEntity.ok().body(bookrep.findAll());
+	}
+	
+	@GetMapping("/getallusers")
+	public ResponseEntity<List<userentity>> fetchallusers()
+	{
+		return ResponseEntity.ok().body(userrep.findAll());
+	}
+	
+	
+	
+	
+	
+	
+	//deleting
+	@DeleteMapping("/deletebook/{id}")
+	public ResponseEntity<Boolean> deletebook(@PathVariable int id)
+	{
+		 Optional<bookentity> books=bookrep.findById(id);
+		
+		if(books.isEmpty())
+		{
+			return ResponseEntity.ok(false);
+		}
+		else
+	{
+			bookrep.deleteById(id);
+			return ResponseEntity.ok(true);
+	}
+			
+
+	}
+	
+	@DeleteMapping("/deleteuser/{id}")
+	public ResponseEntity<Boolean> delete(@PathVariable int id)throws UserNotFoundException
+	{
+		//wrapper
+		Optional<userentity> users = userrep.findById(id);
+		if(users.isEmpty())
+		{
+			//return ResponseEntity.ok(false);
+			throw new UserNotFoundException("user cannot be deleted");
+		}
+		else
+		{
+			userrep.deleteById(id);
+			return ResponseEntity.ok(true);
+		}
+	}
+	
+	@PutMapping("/updatebook")
+	public ResponseEntity<bookentity> update(@RequestBody bookentity bookentity)
+	{
+		bookentity be=null;
+		Optional<bookentity> optemp1=bookrep.findById(bookentity.getBookid());
+		if(optemp1.isPresent())
+		{
+			be=optemp1.get();
+			be.setBookid(bookentity.getBookid());
+			be.setBookname(bookentity.getBookname());
+			return ResponseEntity.ok().body(be);
+			
+		}
+		else
+		{
+			return ResponseEntity.noContent().build();
+			
+			
+		}
+		
+	}
+	
+	@PutMapping("/updateuser")
+	public ResponseEntity<userentity> update(@RequestBody userentity users)	
+	{
+		userentity ue=null;
+		 Optional<userentity> optemp2=userrep.findById(users.getUserid());
+		 if(optemp2.isPresent())
+		 {
+			 ue=optemp2.get();
+			 ue.setUserid(users.getUserid());
+			 ue.setUsername(users.getUsername());
+			 return ResponseEntity.ok().body(userrep.save(ue));
+		 }
+		 else
+		 {
+			 return ResponseEntity.noContent().build();
+		 }
+	}
+	
+	
+
+}

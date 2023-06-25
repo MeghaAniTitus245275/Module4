@@ -1,0 +1,69 @@
+package com.example.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.entity.book;
+import com.example.demo.entity.user;
+import com.example.demo.repository.bookrepository;
+import com.example.demo.repository.userrepository;
+
+@RestController
+@RequestMapping("/api")
+
+public class controller {
+	
+	@Autowired
+	private bookrepository bookrepo;
+	
+	@Autowired
+	private userrepository userrepo;
+	
+	@PostMapping("/create")
+	public ResponseEntity<book> savebook(@RequestBody book books)
+	{
+		return ResponseEntity.ok().body(bookrepo.save(books));
+	}
+	
+	@GetMapping("/fetch/{id}")
+	public ResponseEntity<book> fetchbook(@PathVariable int id)
+	{
+		book books=bookrepo.findById(id).orElse(null);
+		if(books!=null) {
+			return ResponseEntity.ok().body(books);
+		}
+		else {
+			return ResponseEntity.noContent().build();
+		}
+	}
+	
+	@PostMapping("/createUser")
+	public ResponseEntity<user> createuser(@RequestBody user users)
+	{
+		return ResponseEntity.ok().body(userrepo.save(users));
+	}
+	
+	@GetMapping("/fetchUser/{id}")
+	public ResponseEntity<user> fetchuser(@PathVariable int id)
+	{
+		user users = userrepo.findById(id).orElse(null);
+		if(users!=null)
+		{
+			
+			return ResponseEntity.ok().body(users);
+		}
+		else {
+			return ResponseEntity.noContent().build();
+		}
+	}
+	
+	
+	
+
+}

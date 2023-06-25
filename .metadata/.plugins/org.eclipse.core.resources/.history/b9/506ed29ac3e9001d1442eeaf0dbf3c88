@@ -1,0 +1,36 @@
+package array;
+
+public class array {
+	public static void main(String args[])
+	{
+		int a[]= {1,2,3,4};
+		int b[]= {2,3,5,9};
+		int c[]=new int[5];
+		int d[]=new int[5];
+		for(int i=0;i<a.length;i++)
+		{
+			for(int j=0;j<b.length;j++)
+			{
+				if(a[i]!=b[j])
+				{
+					c[i]=a[i];
+					d[j]=b[j];
+					
+				}
+			}
+			
+		}
+		
+		for(int i=0;i<c.length;i++)
+		{
+			System.out.print(c[i]);
+		}
+		
+		System.out.println("");
+		for(int j=0;j<d.length;j++)
+		{
+			System.out.print(d[j]);
+		}
+	}
+
+}

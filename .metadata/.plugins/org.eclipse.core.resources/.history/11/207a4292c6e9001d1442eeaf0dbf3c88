@@ -1,0 +1,47 @@
+package array;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class array {
+	public static void main(String args[])
+	{
+		int a[]= {1,2,3,4};
+		int b[]= {2,3,5,9};
+		
+		List<Integer> li=new ArrayList<>();
+		List<Integer> lis=new ArrayList<>();
+		List<Integer> list=new ArrayList<>();
+		
+		
+		for(int j=0;j<b.length;j++)
+			{
+					li.add(a[j]);
+				
+			}
+		for(int i=0;i<4;i++) {
+			lis.add(b[i]);
+		}
+		System.out.print(li);
+		System.out.print(lis);
+		for(int i=0;i<4;i++) {
+			for(int j=0;j<4;j++) {
+				if(li.get(i)==lis.get(j))
+				{
+					list.add(li.get(i));
+				}
+			}
+		}
+		
+			
+		
+		
+		
+			System.out.print(list);
+		
+		
+		System.out.println("");
+		
+	}
+
+}
